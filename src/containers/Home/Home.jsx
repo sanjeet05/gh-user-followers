@@ -14,6 +14,8 @@ import {
   resetSearchFollowers,
 } from "./Redux/githubActions";
 
+import Carousel from "react-bootstrap/Carousel";
+
 // css
 import "./Home.scss";
 
@@ -54,10 +56,30 @@ class Home extends Component {
     this.handleFollowerNameDebounced(e.target.value);
   };
 
+  convertIntoGroup = (items, perChunk = 4) => {
+    let result = items.reduce((resultArray, item, index) => {
+      const chunkIndex = Math.floor(index / perChunk);
+
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = []; // start a new chunk
+      }
+
+      resultArray[chunkIndex].push(item);
+
+      return resultArray;
+    }, []);
+
+    return result;
+  };
+
   render() {
     const { userId, followerName } = this.state;
 
     const { followers, getFollowerLoading, getFollowerError } = this.props.follower;
+
+    const groupdFollowers = this.convertIntoGroup(followers);
+
+    // console.log("groupdFollowers", groupdFollowers);
 
     return (
       <Fragment>
@@ -65,44 +87,88 @@ class Home extends Component {
           <div className="container">
             <div className="row mt-4">
               <div className="col-md-12">
-                <input
-                  className="form-control"
-                  type="text"
-                  name="userId"
-                  value={userId}
-                  placeholder={"Enter github user id"}
-                  onChange={this.handleUserId}
-                  maxLength={50}
-                />
+                <div className="form-group has-search">
+                  <span className="fa fa-search form-control-feedback"></span>
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="userId"
+                    value={userId}
+                    placeholder={"Enter github user id"}
+                    onChange={this.handleUserId}
+                    maxLength={50}
+                  />
+                </div>
               </div>
             </div>
 
             <div className="row mt-4">
               <div className="col-md-12">
-                <input
-                  className="form-control"
-                  type="text"
-                  name="followerName"
-                  value={followerName}
-                  placeholder={"Search your follower by name"}
-                  onChange={this.handleFollowerName}
-                  maxLength={50}
-                />
+                <div className="form-group has-search">
+                  <span className="fa fa-search form-control-feedback"></span>
+                  <input
+                    className="form-control"
+                    type="text"
+                    name="followerName"
+                    value={followerName}
+                    placeholder={"Search your follower by name"}
+                    onChange={this.handleFollowerName}
+                    maxLength={50}
+                  />
+                </div>
               </div>
             </div>
 
-            <div className="row mt-4 mb-4">
+            <div className="row mt-4">
               {getFollowerLoading && (
                 <div className="col-md-12 p-2">
                   <Spinner />
                 </div>
               )}
 
+              <div className="col-md-12">
+                <Carousel interval={10000}>
+                  {!getFollowerLoading &&
+                    groupdFollowers.map((items, index) => {
+                      return (
+                        <Carousel.Item key={index}>
+                          <div className="row">
+                            {items.map((user) => {
+                              return (
+                                <Fragment key={user.id}>
+                                  <div className="col-md-3 p-2">
+                                    <div className="mt-2">
+                                      <img
+                                        className="user_image"
+                                        alt={user.login}
+                                        src={user.avatar_url}
+                                      />
+                                      <div className="user_name">{user.login}</div>
+                                    </div>
+                                  </div>
+                                </Fragment>
+                              );
+                            })}
+                          </div>
+                        </Carousel.Item>
+                      );
+                    })}
+                </Carousel>
+              </div>
+            </div>
+
+            <div className="row mt-4 mb-4">
+              {/* {getFollowerLoading && (
+                <div className="col-md-12 p-2">
+                  <Spinner />
+                </div>
+              )} */}
+
               {/* {fetching && users.length === 0 && (
                 <div className="col-md-12 p-2">No followers available</div>
               )} */}
 
-              {!getFollowerLoading &&
+              {/* {!getFollowerLoading &&
                 followers.map((user) => {
                   return (
                     <div key={user.id} className="col-md-3 p-2">
@@ -112,7 +178,7 @@ class Home extends Component {
                       </div>
                     </div>
                   );
-                })}
+                })} */}
               {getFollowerError && (
                 <div className="text-danger mt-2 mb-2 text-center">{getFollowerError}</div>
               )}

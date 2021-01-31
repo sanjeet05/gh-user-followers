@@ -15,4 +15,11 @@
     padding: 10px;
     font-weight: 700;
   }
+  .carousel-indicators {
+    bottom: -30px;
+    li {
+      background-color: #000;
+      cursor: pointer;
+    }
+  }
 }

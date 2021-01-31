@@ -99,7 +99,7 @@ class Home extends Component {
                     type="text"
                     name="userId"
                     value={userId}
-                    placeholder={"Enter github user id"}
+                    placeholder={"Enter github user name"}
                     onChange={this.handleUserId}
                     maxLength={50}
                   />
@@ -116,7 +116,7 @@ class Home extends Component {
                     type="text"
                     name="followerName"
                     value={followerName}
-                    placeholder={"Search your follower by name"}
+                    placeholder={"Search your follower by user name"}
                     onChange={this.handleFollowerName}
                     maxLength={50}
                   />

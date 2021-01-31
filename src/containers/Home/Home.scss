@@ -1,0 +1,18 @@
+#home {
+  .user_card {
+    border-radius: 1px;
+    box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.25);
+    background-color: #ffffff;
+    border: 0px;
+  }
+  .user_image {
+    width: 100%;
+    height: auto;
+  }
+  .user_name {
+    font-size: 16px;
+    text-align: center;
+    padding: 10px;
+    font-weight: 700;
+  }
+}

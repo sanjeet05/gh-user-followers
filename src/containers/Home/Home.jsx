@@ -25,6 +25,7 @@ class Home extends Component {
     this.state = {
       userId: "",
       followerName: "",
+      index: 0,
     };
   }
 
@@ -52,7 +53,7 @@ class Home extends Component {
   }, 500);
 
   handleFollowerName = (e) => {
-    this.setState({ followerName: e.target.value });
+    this.setState({ followerName: e.target.value, index: 0 });
     this.handleFollowerNameDebounced(e.target.value);
   };
 
@@ -72,8 +73,12 @@ class Home extends Component {
     return result;
   };
 
+  handleSelect = (selectedIndex, e) => {
+    this.setState({ index: selectedIndex });
+  };
+
   render() {
-    const { userId, followerName } = this.state;
+    const { userId, followerName, index } = this.state;
 
     const { followers, getFollowerLoading, getFollowerError } = this.props.follower;
 
@@ -127,7 +132,7 @@ class Home extends Component {
               )}
 
               <div className="col-md-12">
-                <Carousel interval={10000}>
+                <Carousel interval={null} activeIndex={index} onSelect={this.handleSelect}>
                   {!getFollowerLoading &&
                     groupdFollowers.map((items, index) => {
                       return (

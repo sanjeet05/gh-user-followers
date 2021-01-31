@@ -14,13 +14,11 @@
 
 ## About The Project
 
-The Hive is a distributed network of nodes that connect and communicate to seamlessly deliver data on the internet.
+Get the list of github followers by user_id
 
 #### Live servers
 
 - Dev [https://cacher-ui-dev.streamspace.me](https://cacher-ui-dev.streamspace.me)
-- Qa [https://cacher-ui.qa.streamspace.me](https://cacher-ui.qa.streamspace.me)
-- Prod [https://hive.swrmlabs.io](https://hive.swrmlabs.io)
 
 ### Built With
 
@@ -53,7 +51,7 @@ npm install npm@latest -g
 1. Clone the repo
 
 ```sh
-git clone git@github.com:StreamSpace/ss-cacher-ui.git
+git clone git@github.com:sanjeet05/gh-user-followers.git
 ```
 
 2. Install NPM packages
@@ -67,5 +65,4 @@ npm install
 ```sh
 npm run dev
 
-OR: Connect with QA api server
 ```

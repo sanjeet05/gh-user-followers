@@ -1,6 +1,10 @@
 import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 
+// redux imports start
+import { Provider } from "react-redux";
+import store from "../store";
+
 // 404
 import Page404 from "./Page404";
 
@@ -14,15 +18,17 @@ const EmptyComp = () => {
 
 const Root = () => {
   return (
-    <Router basename={process.env.PUBLIC_URL}>
-      <Switch>
-        <Route exact path="/" component={Home} />
-        <Route exact path="/profile" component={EmptyComp} />
+    <Provider store={store}>
+      <Router>
+        <Switch>
+          <Route exact path="/" component={Home} />
+          <Route exact path="/profile" component={EmptyComp} />
 
-        {/* 404 */}
-        <Route path="*" component={Page404} />
-      </Switch>
-    </Router>
+          {/* 404 */}
+          <Route path="*" component={Page404} />
+        </Switch>
+      </Router>
+    </Provider>
   );
 };
 

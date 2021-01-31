@@ -1,11 +1,18 @@
 import React, { Component, Fragment } from "react";
+import { withRouter } from "react-router-dom";
 import { debounce } from "lodash";
 
 // common components
 import Spinner from "../../components/Spinner/Spinner";
 
-// actions
-import { doGetGithubUserFollowers } from "../../actions/githubActions";
+// redux
+import { connect } from "react-redux";
+import {
+  getFollowers,
+  resetFollowers,
+  searchFollowers,
+  resetSearchFollowers,
+} from "./Redux/githubActions";
 
 // css
 import "./Home.scss";
@@ -14,35 +21,17 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      fetching: true,
-      allUsers: [],
-      users: [],
-      serverError: "",
       userId: "",
       followerName: "",
     };
   }
 
-  getInitialData = async (userId) => {
-    try {
-      this.setState({ fetching: false });
-      const users = await doGetGithubUserFollowers(userId);
-      this.setState({ users, allUsers: users, fetching: true });
-    } catch (error) {
-      this.setState({ serverError: error.message, fetching: true });
-    }
-  };
-
-  // componentDidMount() {
-  //   this.getInitialData();
-  // }
-
   handleUserIdDebounced = debounce((value) => {
     const userId = value.trim();
     if (userId) {
-      this.getInitialData(userId);
+      this.props.getFollowers(userId);
     } else {
-      this.setState({ users: [] });
+      this.props.resetFollowers();
     }
   }, 500);
 
@@ -53,15 +42,10 @@ class Home extends Component {
 
   handleFollowerNameDebounced = debounce((value) => {
     const followerName = value.trim();
-    const { allUsers } = this.state;
     if (followerName) {
-      const newUser = allUsers.filter((user) => {
-        return user.login.toLowerCase().includes(followerName.toLowerCase());
-      });
-
-      this.setState({ users: newUser });
+      this.props.searchFollowers(followerName);
     } else {
-      this.setState({ users: allUsers });
+      this.props.resetSearchFollowers();
     }
   }, 500);
 
@@ -70,15 +54,10 @@ class Home extends Component {
     this.handleFollowerNameDebounced(e.target.value);
   };
 
-  handleSelect = (selectedIndex, e) => {
-    this.setState({
-      index: selectedIndex,
-      direction: e.direction,
-    });
-  };
-
   render() {
-    const { fetching, users, serverError, userId, followerName } = this.state;
+    const { userId, followerName } = this.state;
+
+    const { followers, getFollowerLoading, getFollowerError } = this.props.follower;
 
     return (
       <Fragment>
@@ -87,9 +66,9 @@ class Home extends Component {
             <div className="row mt-4">
               <div className="col-md-12">
                 <input
-                  className={`ss_input form-control`}
-                  type={"text"}
-                  name={"userId"}
+                  className="form-control"
+                  type="text"
+                  name="userId"
                   value={userId}
                   placeholder={"Enter github user id"}
                   onChange={this.handleUserId}
@@ -101,9 +80,9 @@ class Home extends Component {
             <div className="row mt-4">
               <div className="col-md-12">
                 <input
-                  className={`ss_input form-control`}
-                  type={"text"}
-                  name={"followerName"}
+                  className="form-control"
+                  type="text"
+                  name="followerName"
                   value={followerName}
                   placeholder={"Search your follower by name"}
                   onChange={this.handleFollowerName}
@@ -113,7 +92,7 @@ class Home extends Component {
             </div>
 
             <div className="row mt-4 mb-4">
-              {!fetching && (
+              {getFollowerLoading && (
                 <div className="col-md-12 p-2">
                   <Spinner />
                 </div>
@@ -123,8 +102,8 @@ class Home extends Component {
                 <div className="col-md-12 p-2">No followers available</div>
               )} */}
 
-              {fetching &&
-                users.map((user) => {
+              {!getFollowerLoading &&
+                followers.map((user) => {
                   return (
                     <div key={user.id} className="col-md-3 p-2">
                       <div className="user_card mt-2">
@@ -134,8 +113,8 @@ class Home extends Component {
                     </div>
                   );
                 })}
-              {serverError && (
-                <div className="text-danger mt-2 mb-2 text-center">{serverError}</div>
+              {getFollowerError && (
+                <div className="text-danger mt-2 mb-2 text-center">{getFollowerError}</div>
               )}
             </div>
           </div>
@@ -145,4 +124,17 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const mapStateToProps = (store) => {
+  return {
+    follower: store.githubReducer,
+  };
+};
+
+const mapDispatchToProps = {
+  getFollowers,
+  resetFollowers,
+  searchFollowers,
+  resetSearchFollowers,
+};
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Home));

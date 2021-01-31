@@ -1,6 +1,6 @@
 import { apiCalls } from "./apiCalls";
 
-const github_api_url = "https://api.github.com";
+const github_api_url = process.env.REACT_APP_GITHUB_API_URL;
 
 export const doGetGithubUserFollowers = async (userId) => {
   const url = github_api_url + `/users/${userId}/followers`;

@@ -105,7 +105,7 @@ class Home extends Component {
                   type={"text"}
                   name={"followerName"}
                   value={followerName}
-                  placeholder={"Enter your follower name"}
+                  placeholder={"Search your follower by name"}
                   onChange={this.handleFollowerName}
                   maxLength={50}
                 />

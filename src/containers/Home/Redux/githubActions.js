@@ -13,7 +13,7 @@ export const RESET_FOLLOWERS = "RESET_FOLLOWERS";
 export const SEARCH_FOLLOWERS = "SEARCH_FOLLOWERS";
 export const RESET_SEARCH_FOLLOWERS = "RESET_SEARCH_FOLLOWERS";
 
-const github_api_url = process.env.REACT_APP_GITHUB_API_URL;
+const github_api_url = process.env.REACT_APP_GITHUB_API_URL || "https://api.github.com";
 
 // util functions
 function startRequest(actionType) {

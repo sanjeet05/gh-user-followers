@@ -50,10 +50,11 @@ class Home extends Component {
     } else {
       this.props.resetSearchFollowers();
     }
+    this.setState({ index: 0 });
   }, 500);
 
   handleFollowerName = (e) => {
-    this.setState({ followerName: e.target.value, index: 0 });
+    this.setState({ followerName: e.target.value });
     this.handleFollowerNameDebounced(e.target.value);
   };
 
